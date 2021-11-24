@@ -1,10 +1,10 @@
 from django.db import models
-
+from datetime import datetime
 class User(models.Model):
     nom = models.CharField(max_length=200)
     email = models.EmailField(max_length=200)
     password = models.CharField(max_length=200)
-    date = models.DateTimeField(auto_now_add=True)
+    date_joined = models.DateTimeField(auto_now_add=True)
     active = models.BooleanField(default=True)
 
     def __str__(self):
@@ -14,7 +14,7 @@ class Projet(models.Model):
     nom = models.CharField(max_length=200)
     type = models.CharField(max_length=200)
     description = models.TextField()
-    date = models.DateTimeField(auto_now_add=True)
+    date_joined = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     etat = models.CharField(max_length=200, default="en cours")
     def __str__(self):
@@ -37,6 +37,7 @@ unite = (
 )
 class Tache(models.Model):
     projet = models.ForeignKey(Projet, on_delete=models.CASCADE)
+    date_creation = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     nom = models.CharField(max_length=200)
     description = models.TextField()
@@ -96,8 +97,8 @@ class Employe(models.Model):
 class Rapport_employe(models.Model):
     employe = models.ForeignKey(Employe, on_delete=models.PROTECT)
     date_creation = models.DateTimeField(auto_now_add=True)
-    date = models.DateField()
-    time = models.TimeField()
+    date_choisie = models.DateField()
+    temps_choisi = models.TimeField()
     type_activite = models.CharField(max_length=200)
     description = models.TextField()
 
@@ -117,6 +118,7 @@ class Suivre(models.Model):
 class Commentaires(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT)
     tache = models.ForeignKey(Tache, on_delete=models.CASCADE)
+    date_creation = models.DateTimeField(auto_now_add=True)
     commentaire = models.TextField()
     fichier = models.FileField(null=True)
 

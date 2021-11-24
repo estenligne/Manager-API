@@ -27,7 +27,7 @@ class Migration(migrations.Migration):
                 ('nom', models.CharField(max_length=200)),
                 ('type', models.CharField(max_length=200)),
                 ('description', models.TextField()),
-                ('date', models.DateTimeField(auto_now_add=True)),
+                ('date_joined', models.DateTimeField(auto_now_add=True)),
             ],
         ),
         migrations.CreateModel(
@@ -37,7 +37,7 @@ class Migration(migrations.Migration):
                 ('nom', models.CharField(max_length=200)),
                 ('email', models.EmailField(max_length=200)),
                 ('password', models.CharField(max_length=200)),
-                ('date', models.DateTimeField(auto_now_add=True)),
+                ('date_joined', models.DateTimeField(auto_now_add=True)),
                 ('active', models.BooleanField(default=True)),
             ],
         ),
@@ -81,7 +81,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('date_creation', models.DateTimeField(auto_now_add=True)),
-                ('date', models.DateField()),
+                ('date_joined', models.DateField()),
                 ('time', models.TimeField()),
                 ('type_activite', models.CharField(max_length=200)),
                 ('description', models.TextField()),
