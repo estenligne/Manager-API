@@ -1,14 +1,7 @@
 from django.db import models
-from datetime import datetime
-class User(models.Model):
-    nom = models.CharField(max_length=200)
-    email = models.EmailField(max_length=200)
-    password = models.CharField(max_length=200)
-    date_joined = models.DateTimeField(auto_now_add=True)
-    active = models.BooleanField(default=True)
+from django.contrib.auth.models import User
 
-    def __str__(self):
-        return self.nom
+
 
 class Projet(models.Model):
     nom = models.CharField(max_length=200)
@@ -92,7 +85,7 @@ class Employe(models.Model):
         default='jour'
     )
     def __str__(self):
-        return f"boss: '{self.tache.user.nom}'\nemploye: '{self.user.nom}'\ntache: '{self.tache.nom}' "
+        return f"boss: '{self.tache.user.username}'\nemploye: '{self.user.username}'\ntache: '{self.tache.nom}' "
 
 class Rapport_employe(models.Model):
     employe = models.ForeignKey(Employe, on_delete=models.PROTECT)
@@ -103,7 +96,7 @@ class Rapport_employe(models.Model):
     description = models.TextField()
 
     def __str__(self):
-        return f"boss: '{self.employe.tache.user.nom}'\nemploye: '{self.employe.user.nom}'\ntache: '{self.employe.tache.nom}' "
+        return f"boss: '{self.employe.tache.user.username}'\nemploye: '{self.employe.user.username}'\ntache: '{self.employe.tache.nom}' "
 
 
 class Suivre(models.Model):
@@ -123,4 +116,6 @@ class Commentaires(models.Model):
     fichier = models.FileField(null=True)
 
     def __str__(self):
-        return f"{self.user.nom}: '{self.tache.nom}'"
+        return f"{self.user.username}: '{self.tache.nom}'"
+
+

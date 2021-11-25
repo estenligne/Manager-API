@@ -7,7 +7,7 @@ class UserSerializer(WritableNestedModelSerializer, serializers.ModelSerializer)
         model = User
         fields =[
             'id',
-            'nom',
+            'username',
             'email',
             'password',
         ]
