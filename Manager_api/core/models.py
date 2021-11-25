@@ -1,6 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+class relation_user(models.Model):
+    user1 = models.ForeignKey(User, on_delete = models.CASCADE, related_name="receveur")
+    user2 = models.ForeignKey(User, on_delete = models.CASCADE, related_name="demandeur")
+    ami = models.BooleanField(default=False)
 
 
 class Projet(models.Model):
@@ -98,6 +102,14 @@ class Rapport_employe(models.Model):
     def __str__(self):
         return f"boss: '{self.employe.tache.user.username}'\nemploye: '{self.employe.user.username}'\ntache: '{self.employe.tache.nom}' "
 
+
+class Suivre_rapport(models.Model):
+    user = models.ForeignKey(User,  on_delete=models.CASCADE)
+    projet = models.ForeignKey(Projet, on_delete=models.CASCADE)
+    autorisations = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.projet.nom
 
 class Suivre(models.Model):
     user = models.ForeignKey(User,  on_delete=models.CASCADE)
