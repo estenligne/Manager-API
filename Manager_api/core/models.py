@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
+
 class relation_user(models.Model):
     user1 = models.ForeignKey(User, on_delete = models.CASCADE, related_name="receveur")
     user2 = models.ForeignKey(User, on_delete = models.CASCADE, related_name="demandeur")
@@ -33,7 +35,7 @@ unite = (
     ("7", 'annee'),
 )
 class Tache(models.Model):
-    projet = models.ForeignKey(Projet, on_delete=models.CASCADE)
+    projet = models.ForeignKey(Projet, on_delete=models.CASCADE, null = True)
     date_creation = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     nom = models.CharField(max_length=200)
