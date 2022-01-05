@@ -10,32 +10,40 @@ class relation_user(models.Model):
 
 
 class Projet(models.Model):
+    termine = "termine"
+    en_cours = "en cours"
     nom = models.CharField(max_length=200)
     type = models.CharField(max_length=200)
     description = models.TextField()
     date_joined = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    etat = models.CharField(max_length=200, default="en cours")
+    etat = models.CharField(
+        max_length=200,
+        choices= ((termine, "termine"), (en_cours, "en cours")),
+        default=en_cours
+    )
     def __str__(self):
         return self.nom
 
 
-priority = (
-    ('1', 'basse'),
-    ('2', 'moyenne'),
-    ('3', 'elevee'),
-)
-unite = (
-    ("1", 'seconde'),
-    ("2", 'min'),
-    ("3", 'heure'),
-    ("4", 'jour'),
-    ("5", 'semaine'),
-    ("6", 'mois'),
-    ("7", 'annee'),
-)
+
 class Tache(models.Model):
-    projet = models.ForeignKey(Projet, on_delete=models.CASCADE, null = True)
+    termine = "termine"
+    en_cours = "en cours"
+
+    basse = 'basse'
+    moyenne = 'moyenne'
+    elevee = 'elevee'
+
+    secondes = 'secondes'
+    mins = 'mins'
+    heures = 'heures'
+    jours = 'jours'
+    semaines = 'semaines'
+    mois = 'mois'
+    annees = 'annees'
+
+    projet = models.ForeignKey(Projet, on_delete=models.CASCADE, null = True, blank = True)
     date_creation = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     nom = models.CharField(max_length=200)
@@ -43,19 +51,23 @@ class Tache(models.Model):
     type = models.CharField(max_length=200)
     priorite = models.CharField(
         max_length=7,
-        choices=priority,
-        default='basse',
+        choices=((basse ,'basse'),(moyenne , 'moyenne'),(elevee , 'elevee')),
+        default=basse,
     )
-    duree_estimee = models.IntegerField()
+    duree_estimee = models.IntegerField( default=30)
     unite_duree = models.CharField(
-        max_length=7,
-        choices=unite,
-        default='min'
+        max_length=8,
+        choices=((secondes, 'secondes'),(mins, 'mins'),(heures, 'heures'),(jours, 'jours'),(semaines, 'semaines'),(mois, 'mois'),(annees, 'annees')),
+        default=mins
     )
-    jour = models.DateField(null=True, default= None)
+    jour = models.DateField(null=True, default= None, blank=True)
     deadline = models.DateTimeField(null=True, default= None)
-    etat = models.CharField(max_length=200)
-    fichier = models.FileField(null=True)
+    etat = models.CharField(
+        max_length=200,
+        choices= ((termine, "termine"), (en_cours, "en cours")),
+        default=en_cours
+    )
+    fichier = models.FileField(null=True, blank=True)
 
     def __str__(self):
         return self.nom
@@ -81,13 +93,21 @@ class Relation_taches(models.Model):
 
 
 class Employe(models.Model):
+    secondes = 'secondes'
+    mins = 'mins'
+    heures = 'heures'
+    jours = 'jours'
+    semaines = 'semaines'
+    mois = 'mois'
+    annees = 'annees'
+
     user = models.ForeignKey(User, on_delete=models.PROTECT)
     tache = models.ForeignKey(Tache, on_delete=models.CASCADE)
     date_attribution = models.DateField(auto_now_add=True)
     delais = models.IntegerField(null=True)
     unite_delais = models.CharField(
-        max_length=7,
-        choices=unite,
+        max_length=8,
+        choices=((secondes, 'secondes'),(mins, 'mins'),(heures, 'heures'),(jours, 'jours'),(semaines, 'semaines'),(mois, 'mois'),(annees, 'annees')),
         default='jour'
     )
     def __str__(self):

@@ -29,7 +29,7 @@ class TacheSerializer(WritableNestedModelSerializer, serializers.ModelSerializer
         model = Tache
         fields = [
             'id',
-            'preojet',
+            'projet',
             'date_creation',
             'user',
             'nom',
