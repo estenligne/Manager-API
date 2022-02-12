@@ -1,45 +1,33 @@
 from django.shortcuts import render
 
 # Create your views here.
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework import permissions
 from .serializer import *
 from .models import *
+from .MANAGER import *
 import time
+from django.http import HttpResponse
 
-class Test_User_exist(APIView):
-    permission_classes = [permissions.AllowAny]
-    def get(self,request, *args, **kwargs):
-        return Response({'id':request.user.id})
-
-
-class RegisterApi(APIView):
-    permission_classes = [permissions.AllowAny]
-    def post(self, request, *args,  **kwargs):
-        serializer = UserSerializer(data=request.data)
-        if serializer.is_valid():
-            user = User.objects.create_user(request.POST['username'], request.POST['email'], request.POST['password'])
-            user.save()
-            return Response({'statut': True})
-        else:
-            return Response({'statut': False})
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all().order_by('id')
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-class UserNameViewset(APIView):
+class UserIdViewset(APIView):
     permission_classes = [permissions.IsAuthenticated]
     def get(self, request, name=None, *args, **kwargs):
-        if name:
-            qs = User.objects.get(username = name)
-            serializer = UserSerializer(qs, context={'request':request})
-            return Response(serializer.data)
-        else:
-            return Response({'error': 'no email'})
+        return Response({'id': request.user.id})
+class UserReViewset(APIView):
+    permission_classes = [permissions.AllowAny]
+    def post(self, request):
+
+        user = User.objects.create_user(request.data['username'], request.data['email'], request.data['password'])
+        return Response(user.save())
 
 class ProjetViewSet(viewsets.ModelViewSet):
     queryset = Projet.objects.all().order_by('id')
@@ -52,7 +40,6 @@ class ProjetUserViewset(APIView):
             qs= Projet.objects.filter(user= User.objects.get(id=request.user.id))
             serializer =ProjetSerializer(qs, many=True, context={'request': request})
             print(f"user : {request.user.id}")
-            print(serializer.data)
             return Response(serializer.data)
 
 
@@ -62,13 +49,21 @@ class TacheViewSet(viewsets.ModelViewSet):
     serializer_class = TacheSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+    @action(methods=['post', 'put'], detail=True)
+    def Tri(self, request):
+        print("tri")
+        print(request.data)
+        qs = Tache.objects.filter(user=request.user.id, etat="en cours")
+        manager = Manager(tache=qs)
+        manager.apply_filters()
+        print(f'ok pour le tri du user {request.user.id}')
 
 class TacheUserViewSet(APIView):
     permission_classes = [permissions.IsAuthenticated]
     def get(self, request, *args, **kwargs):
-        qs = Tache.objects.filter(user=User.objects.get(id=request.user.id))
+        print(f"l'utilisateur est {request.user}")
+        qs = Tache.objects.filter(user=request.user.id).order_by('id')
         serializer = TacheSerializer(qs, many=True, context={'request': request})
-        print(f"user : {request.user.id}")
         return Response(serializer.data)
 
 class Relation_TachesViewSet(viewsets.ModelViewSet):
@@ -95,4 +90,6 @@ class CommentairesViewSet(viewsets.ModelViewSet):
     queryset = Commentaires.objects.all().order_by("id")
     serializer_class = CommentairesSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+
 

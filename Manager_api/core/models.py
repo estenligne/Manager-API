@@ -30,10 +30,23 @@ class Projet(models.Model):
 class Tache(models.Model):
     termine = "termine"
     en_cours = "en cours"
+    nouveau = "nouveau"
+    investigation = "investigation"
+    besoin_de_clarification = "besoin de clarification"
+    estimation = "estimation de temps"
+    pres = "pres pour commencer"
+    en_test = "en test"
+    deployer = "deployer"
+    completer = "completer"
+    duplicate = "duplicate/double/repetition"
+    fermer = "fermer"
+    enquete_a_revoir = "enquete a revoir/ pas sure de la cause"
+
 
     basse = 'basse'
     moyenne = 'moyenne'
     elevee = 'elevee'
+    critical= "critical/absolute"
 
     secondes = 'secondes'
     mins = 'mins'
@@ -45,26 +58,36 @@ class Tache(models.Model):
 
     projet = models.ForeignKey(Projet, on_delete=models.CASCADE, null = True, blank = True)
     date_creation = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='owner')
+    user_asign = models.ForeignKey(User, on_delete=models.CASCADE, related_name='asign', null=True, blank=True)
     nom = models.CharField(max_length=200)
     description = models.TextField()
     type = models.CharField(max_length=200)
     priorite = models.CharField(
-        max_length=7,
-        choices=((basse ,'basse'),(moyenne , 'moyenne'),(elevee , 'elevee')),
+        max_length=17,
+        choices=((basse ,'basse'),(moyenne , 'moyenne'),(elevee , 'elevee'), (critical, "critical/absolute")),
         default=basse,
     )
     duree_estimee = models.IntegerField( default=30)
-    unite_duree = models.CharField(
-        max_length=8,
-        choices=((secondes, 'secondes'),(mins, 'mins'),(heures, 'heures'),(jours, 'jours'),(semaines, 'semaines'),(mois, 'mois'),(annees, 'annees')),
-        default=mins
-    )
     jour = models.DateField(null=True, default= None, blank=True)
     deadline = models.DateTimeField(null=True, default= None)
     etat = models.CharField(
         max_length=200,
-        choices= ((termine, "termine"), (en_cours, "en cours")),
+        choices= (
+            (termine, "termine"),
+            (en_cours, "en cours"),
+            (nouveau , "nouveau"),
+            (investigation , "investigation"),
+            (besoin_de_clarification , "besoin de clarification"),
+            (estimation , "estimation de temps"),
+            (pres , "pres pour commencer"),
+            (en_test , "en test"),
+            (deployer , "deployer"),
+            (completer , "completer"),
+            (duplicate , "duplicate/double/repetition"),
+            (fermer , "fermer"),
+            (enquete_a_revoir , "enquete a revoir/ pas sure de la cause")
+        ),
         default=en_cours
     )
     fichier = models.FileField(null=True, blank=True)

@@ -1,0 +1,1 @@
+web: gunicorn Manager_api.wsgi
