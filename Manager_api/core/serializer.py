@@ -9,7 +9,6 @@ class UserSerializer(WritableNestedModelSerializer, serializers.ModelSerializer)
             'id',
             'username',
             'email',
-            'password',
         ]
 
 class ProjetSerializer(WritableNestedModelSerializer, serializers.ModelSerializer):

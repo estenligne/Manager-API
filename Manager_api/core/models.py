@@ -93,7 +93,7 @@ class Tache(models.Model):
     fichier = models.FileField(null=True, blank=True)
 
     def __str__(self):
-        return self.nom
+        return f"tache:{self.nom}; user:{self.user}; user_asign:{self.user_asign}"
 
 # # c'est la premier qui est en relation avec la deuxieme
 relation_tache = (

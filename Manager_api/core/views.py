@@ -1,6 +1,7 @@
 from django.shortcuts import render
 
 # Create your views here.
+from django.db.models import Q
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import viewsets
@@ -62,7 +63,8 @@ class TacheUserViewSet(APIView):
     permission_classes = [permissions.IsAuthenticated]
     def get(self, request, *args, **kwargs):
         print(f"l'utilisateur est {request.user}")
-        qs = Tache.objects.filter(user=request.user.id).order_by('id')
+        qs = Tache.objects.filter(Q(user=request.user.id) |  Q(user_asign=request.user.id))
+        print(qs)
         serializer = TacheSerializer(qs, many=True, context={'request': request})
         return Response(serializer.data)
 
