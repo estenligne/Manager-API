@@ -64,7 +64,6 @@ class TacheUserViewSet(APIView):
     def get(self, request, *args, **kwargs):
         print(f"l'utilisateur est {request.user}")
         qs = Tache.objects.filter(Q(user=request.user.id) |  Q(user_asign=request.user.id))
-        print(qs)
         serializer = TacheSerializer(qs, many=True, context={'request': request})
         return Response(serializer.data)
 
